@@ -124,4 +124,9 @@ class FirebaseService {
     });
     return f;
   }
+  
+// ============ دوال عامة (جديدة) ============
+Future<List<Map<String, dynamic>>> getCollection(String col) => _get(col);
+Future<bool> addToCollection(String col, Map<String, dynamic> data) =>
+    _add(col, data);
 }
