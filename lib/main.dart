@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 
+// ============ ألوان التطبيق ============
+const Color kPrimary = Color(0xFF1A237E);      // كحلي (أساسي - ذكوري)
+const Color kAccent = Color(0xFFF48FB1);        // وردي فاتح (ثانوي - أنثوي)
+const Color kAccentDark = Color(0xFFC2185B);    // وردي داكن للنصوص
+const Color kBackground = Color(0xFFF5F7FA);    // أبيض لؤلؤي
+const Color kSoftPink = Color(0xFFFCE4EC);      // وردي فاتح جداً للخلفيات
+
 void main() {
   runApp(const FarahApp());
 }
@@ -13,10 +20,14 @@ class FarahApp extends StatelessWidget {
       title: 'فرح',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: const Color(0xFFB8860B),
-        scaffoldBackgroundColor: const Color(0xFFFDF6E3),
+        primaryColor: kPrimary,
+        scaffoldBackgroundColor: kBackground,
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFB8860B)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: kPrimary,
+          primary: kPrimary,
+          secondary: kAccent,
+        ),
       ),
       home: const SplashScreen(),
     );
@@ -47,12 +58,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFB8860B),
+      backgroundColor: kPrimary,
       body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.celebration, size: 120, color: Colors.white),
+            Icon(Icons.celebration, size: 120, color: kAccent),
             SizedBox(height: 20),
             Text('فرح',
                 style: TextStyle(
@@ -61,7 +72,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
             Text('لحجز قاعات الأفراح في ليبيا',
-                style: TextStyle(fontSize: 18, color: Colors.white)),
+                style: TextStyle(fontSize: 18, color: kAccent)),
           ],
         ),
       ),
@@ -102,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.celebration, size: 80, color: Color(0xFFB8860B)),
+              const Icon(Icons.celebration, size: 80, color: kPrimary),
               const SizedBox(height: 20),
               const Text('تسجيل الدخول',
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
@@ -112,9 +123,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 keyboardType: TextInputType.phone,
                 decoration: InputDecoration(
                   labelText: 'رقم الهاتف',
-                  prefixIcon: const Icon(Icons.phone),
+                  prefixIcon: const Icon(Icons.phone, color: kPrimary),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: kAccent, width: 2)),
                 ),
               ),
               const SizedBox(height: 16),
@@ -123,9 +137,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'كلمة المرور',
-                  prefixIcon: const Icon(Icons.lock),
+                  prefixIcon: const Icon(Icons.lock, color: kPrimary),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: kAccent, width: 2)),
                 ),
               ),
               const SizedBox(height: 24),
@@ -134,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 50,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFB8860B),
+                    backgroundColor: kPrimary,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
@@ -149,7 +166,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   context,
                   MaterialPageRoute(builder: (_) => const RegisterScreen()),
                 ),
-                child: const Text('إنشاء حساب جديد'),
+                child: const Text('إنشاء حساب جديد',
+                    style: TextStyle(color: kAccentDark)),
               ),
             ],
           ),
@@ -183,7 +201,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('إنشاء حساب'),
-        backgroundColor: const Color(0xFFB8860B),
+        backgroundColor: kPrimary,
         foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
@@ -195,7 +213,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               controller: _name,
               decoration: const InputDecoration(
                   labelText: 'الاسم الكامل',
-                  prefixIcon: Icon(Icons.person),
+                  prefixIcon: Icon(Icons.person, color: kPrimary),
                   border: OutlineInputBorder()),
             ),
             const SizedBox(height: 16),
@@ -204,7 +222,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               keyboardType: TextInputType.phone,
               decoration: const InputDecoration(
                   labelText: 'رقم الهاتف',
-                  prefixIcon: Icon(Icons.phone),
+                  prefixIcon: Icon(Icons.phone, color: kPrimary),
                   border: OutlineInputBorder()),
             ),
             const SizedBox(height: 16),
@@ -213,7 +231,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               obscureText: true,
               decoration: const InputDecoration(
                   labelText: 'كلمة المرور',
-                  prefixIcon: Icon(Icons.lock),
+                  prefixIcon: Icon(Icons.lock, color: kPrimary),
                   border: OutlineInputBorder()),
             ),
             const SizedBox(height: 24),
@@ -221,8 +239,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFB8860B)),
+                style: ElevatedButton.styleFrom(backgroundColor: kPrimary),
                 onPressed: _register,
                 child: const Text('تسجيل',
                     style: TextStyle(fontSize: 18, color: Colors.white)),
@@ -315,7 +332,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('فرح - القاعات'),
-        backgroundColor: const Color(0xFFB8860B),
+        backgroundColor: kPrimary,
         foregroundColor: Colors.white,
         actions: [
           IconButton(
@@ -343,9 +360,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: ChoiceChip(
                     label: Text(c),
                     selected: sel,
-                    selectedColor: const Color(0xFFB8860B),
+                    selectedColor: kPrimary,
+                    backgroundColor: kSoftPink,
                     labelStyle: TextStyle(
-                        color: sel ? Colors.white : Colors.black),
+                        color: sel ? Colors.white : kAccentDark,
+                        fontWeight: FontWeight.bold),
                     onSelected: (_) => setState(() => selectedCity = c),
                   ),
                 );
@@ -412,12 +431,12 @@ class HallCard extends StatelessWidget {
                   Row(
                     children: [
                       const Icon(Icons.location_on,
-                          size: 16, color: Colors.grey),
+                          size: 16, color: kAccentDark),
                       const SizedBox(width: 4),
                       Text(hall.city,
                           style: const TextStyle(color: Colors.grey)),
                       const Spacer(),
-                      const Icon(Icons.people, size: 16, color: Colors.grey),
+                      const Icon(Icons.people, size: 16, color: kAccentDark),
                       const SizedBox(width: 4),
                       Text('${hall.capacity} شخص'),
                     ],
@@ -426,7 +445,7 @@ class HallCard extends StatelessWidget {
                   Text('${hall.price.toStringAsFixed(0)} د.ل / الليلة',
                       style: const TextStyle(
                           fontSize: 18,
-                          color: Color(0xFFB8860B),
+                          color: kAccentDark,
                           fontWeight: FontWeight.bold)),
                 ],
               ),
@@ -448,7 +467,7 @@ class HallDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(hall.name),
-        backgroundColor: const Color(0xFFB8860B),
+        backgroundColor: kPrimary,
         foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
@@ -477,11 +496,11 @@ class HallDetailsScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      const Icon(Icons.location_on, color: Colors.grey),
+                      const Icon(Icons.location_on, color: kPrimary),
                       const SizedBox(width: 6),
                       Text(hall.city, style: const TextStyle(fontSize: 16)),
                       const SizedBox(width: 20),
-                      const Icon(Icons.people, color: Colors.grey),
+                      const Icon(Icons.people, color: kPrimary),
                       const SizedBox(width: 6),
                       Text('${hall.capacity} شخص',
                           style: const TextStyle(fontSize: 16)),
@@ -499,16 +518,28 @@ class HallDetailsScreen extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 20, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
-                  const Wrap(
+                  Wrap(
                     spacing: 8,
                     runSpacing: 8,
-                    children: [
-                      Chip(label: Text('تزيين القاعة')),
-                      Chip(label: Text('ضيافة كاملة')),
-                      Chip(label: Text('تصوير احترافي')),
-                      Chip(label: Text('موقف سيارات')),
-                      Chip(label: Text('دي جي وموسيقى')),
-                      Chip(label: Text('تكييف مركزي')),
+                    children: const [
+                      Chip(
+                          label: Text('تزيين القاعة'),
+                          backgroundColor: kSoftPink),
+                      Chip(
+                          label: Text('ضيافة كاملة'),
+                          backgroundColor: kSoftPink),
+                      Chip(
+                          label: Text('تصوير احترافي'),
+                          backgroundColor: kSoftPink),
+                      Chip(
+                          label: Text('موقف سيارات'),
+                          backgroundColor: kSoftPink),
+                      Chip(
+                          label: Text('دي جي وموسيقى'),
+                          backgroundColor: kSoftPink),
+                      Chip(
+                          label: Text('تكييف مركزي'),
+                          backgroundColor: kSoftPink),
                     ],
                   ),
                   const SizedBox(height: 30),
@@ -524,13 +555,13 @@ class HallDetailsScreen extends StatelessWidget {
                                 style: const TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
-                                    color: Color(0xFFB8860B))),
+                                    color: kAccentDark)),
                           ],
                         ),
                       ),
                       ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFB8860B),
+                          backgroundColor: kPrimary,
                           padding: const EdgeInsets.symmetric(
                               horizontal: 24, vertical: 14),
                           shape: RoundedRectangleBorder(
@@ -612,7 +643,7 @@ class _BookingScreenState extends State<BookingScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('حجز ${widget.hall.name}'),
-        backgroundColor: const Color(0xFFB8860B),
+        backgroundColor: kPrimary,
         foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
@@ -627,7 +658,7 @@ class _BookingScreenState extends State<BookingScreen> {
               controller: _name,
               decoration: const InputDecoration(
                   labelText: 'الاسم الكامل',
-                  prefixIcon: Icon(Icons.person),
+                  prefixIcon: Icon(Icons.person, color: kPrimary),
                   border: OutlineInputBorder()),
             ),
             const SizedBox(height: 12),
@@ -636,7 +667,7 @@ class _BookingScreenState extends State<BookingScreen> {
               keyboardType: TextInputType.phone,
               decoration: const InputDecoration(
                   labelText: 'رقم الهاتف',
-                  prefixIcon: Icon(Icons.phone),
+                  prefixIcon: Icon(Icons.phone, color: kPrimary),
                   border: OutlineInputBorder()),
             ),
             const SizedBox(height: 12),
@@ -645,7 +676,7 @@ class _BookingScreenState extends State<BookingScreen> {
               child: InputDecorator(
                 decoration: const InputDecoration(
                     labelText: 'تاريخ الحجز',
-                    prefixIcon: Icon(Icons.calendar_month),
+                    prefixIcon: Icon(Icons.calendar_month, color: kPrimary),
                     border: OutlineInputBorder()),
                 child: Text(selectedDate == null
                     ? 'اختر التاريخ'
@@ -660,7 +691,8 @@ class _BookingScreenState extends State<BookingScreen> {
               min: 50,
               max: widget.hall.capacity.toDouble(),
               divisions: 10,
-              activeColor: const Color(0xFFB8860B),
+              activeColor: kAccent,
+              inactiveColor: kSoftPink,
               label: '$guests',
               onChanged: (v) => setState(() => guests = v.round()),
             ),
@@ -676,9 +708,9 @@ class _BookingScreenState extends State<BookingScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.amber.shade50,
+                color: kSoftPink,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFB8860B)),
+                border: Border.all(color: kAccent, width: 2),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -690,7 +722,7 @@ class _BookingScreenState extends State<BookingScreen> {
                       style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFFB8860B))),
+                          color: kAccentDark)),
                 ],
               ),
             ),
@@ -700,7 +732,7 @@ class _BookingScreenState extends State<BookingScreen> {
               height: 55,
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFB8860B),
+                  backgroundColor: kPrimary,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
                 ),
@@ -785,7 +817,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('الدفع الإلكتروني'),
-        backgroundColor: const Color(0xFFB8860B),
+        backgroundColor: kPrimary,
         foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
@@ -838,7 +870,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 decoration: const InputDecoration(
                   labelText: 'رقم البطاقة',
                   hintText: '0000 0000 0000 0000',
-                  prefixIcon: Icon(Icons.credit_card),
+                  prefixIcon: Icon(Icons.credit_card, color: kPrimary),
                   border: OutlineInputBorder(),
                   counterText: '',
                 ),
@@ -848,7 +880,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 controller: _cardName,
                 decoration: const InputDecoration(
                   labelText: 'اسم حامل البطاقة',
-                  prefixIcon: Icon(Icons.person),
+                  prefixIcon: Icon(Icons.person, color: kPrimary),
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -883,7 +915,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.amber.shade50,
+                  color: kSoftPink,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -898,7 +930,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               height: 55,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFB8860B),
+                  backgroundColor: kPrimary,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
                 ),
@@ -939,7 +971,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               style: TextStyle(
                   fontWeight: bold ? FontWeight.bold : FontWeight.normal,
                   fontSize: bold ? 18 : 15,
-                  color: bold ? const Color(0xFFB8860B) : Colors.black)),
+                  color: bold ? kAccentDark : Colors.black)),
         ],
       ),
     );
@@ -952,17 +984,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-            color: sel ? const Color(0xFFB8860B) : Colors.grey.shade300,
+            color: sel ? kAccent : Colors.grey.shade300,
             width: sel ? 2 : 1),
       ),
       child: ListTile(
-        leading:
-            Icon(icon, color: sel ? const Color(0xFFB8860B) : Colors.grey),
+        leading: Icon(icon, color: sel ? kAccentDark : Colors.grey),
         title: Text(title,
             style: TextStyle(
                 fontWeight: sel ? FontWeight.bold : FontWeight.normal)),
         trailing: sel
-            ? const Icon(Icons.check_circle, color: Color(0xFFB8860B))
+            ? const Icon(Icons.check_circle, color: kAccentDark)
             : null,
         onTap: () => setState(() => method = title),
       ),
@@ -1035,7 +1066,7 @@ class SuccessScreen extends StatelessWidget {
                 height: 50,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFB8860B),
+                    backgroundColor: kPrimary,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
@@ -1066,7 +1097,7 @@ class SuccessScreen extends StatelessWidget {
           Text(value,
               style: TextStyle(
                   fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-                  color: bold ? const Color(0xFFB8860B) : Colors.black)),
+                  color: bold ? kAccentDark : Colors.black)),
         ],
       ),
     );
@@ -1082,7 +1113,7 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('حسابي'),
-        backgroundColor: const Color(0xFFB8860B),
+        backgroundColor: kPrimary,
         foregroundColor: Colors.white,
       ),
       body: ListView(
@@ -1091,7 +1122,7 @@ class ProfileScreen extends StatelessWidget {
           const Center(
             child: CircleAvatar(
               radius: 50,
-              backgroundColor: Color(0xFFB8860B),
+              backgroundColor: kAccent,
               child: Icon(Icons.person, size: 60, color: Colors.white),
             ),
           ),
@@ -1137,7 +1168,7 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _item(IconData icon, String title) {
     return ListTile(
-      leading: Icon(icon, color: const Color(0xFFB8860B)),
+      leading: Icon(icon, color: kPrimary),
       title: Text(title),
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
       onTap: () {},
