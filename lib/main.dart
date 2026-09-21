@@ -1170,13 +1170,13 @@ class ProfileScreen extends StatelessWidget {
                 style: TextStyle(color: Colors.grey)),
           ),
           const SizedBox(height: 30),
-          _item(Icons.history, 'حجوزاتي السابقة'),
-          _item(Icons.favorite, 'القاعات المفضلة'),
-          _item(Icons.payment, 'طرق الدفع'),
-          _item(Icons.notifications, 'الإشعارات'),
-          _item(Icons.help, 'المساعدة والدعم'),
-          _item(Icons.admin_panel_settings, 'لوحة تحكم المدير'),
-          _item(Icons.info, 'عن التطبيق'),
+          _item(context, Icons.history, 'حجوزاتي السابقة'),
+_item(context, Icons.favorite, 'القاعات المفضلة'),
+_item(context, Icons.payment, 'طرق الدفع'),
+_item(context, Icons.notifications, 'الإشعارات'),
+_item(context, Icons.help, 'المساعدة والدعم'),
+_item(context, Icons.admin_panel_settings, 'لوحة تحكم المدير'),
+_item(context, Icons.info, 'عن التطبيق'),
           const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -1200,7 +1200,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _item(IconData icon, String title) {
+  Widget _item(BuildContext context, IconData icon, String title) {
     return ListTile(
       leading: Icon(icon, color: kPrimary),
       title: Text(title),
