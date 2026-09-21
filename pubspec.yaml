@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.6
+  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -27,5 +28,5 @@ flutter_launcher_icons:
   ios: false
   image_path: "icon.png"
   min_sdk_android: 21
-adaptive_icon_background: "#1A237E"
-adaptive_icon_foreground: "icon.png"
+  adaptive_icon_background: "#1A237E"
+  adaptive_icon_foreground: "icon.png"
