@@ -129,4 +129,7 @@ class FirebaseService {
 Future<List<Map<String, dynamic>>> getCollection(String col) => _get(col);
 Future<bool> addToCollection(String col, Map<String, dynamic> data) =>
     _add(col, data);
+  
+Future<bool> deleteCollectionItem(String col, String id) =>
+    _delete(col, id);
 }
