@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'services/firebase_service.dart';
 import 'screens/admin_login_screen.dart';
+
 // ============ ألوان التطبيق ============
-const Color kPrimary = Color(0xFF1A237E);      // كحلي (أساسي - ذكوري)
-const Color kAccent = Color(0xFFF48FB1);        // وردي فاتح (ثانوي - أنثوي)
-const Color kAccentDark = Color(0xFFC2185B);    // وردي داكن للنصوص
-const Color kBackground = Color(0xFFF5F7FA);    // أبيض لؤلؤي
-const Color kSoftPink = Color(0xFFFCE4EC);      // وردي فاتح جداً للخلفيات
+const Color kPrimary = Color(0xFF1A237E);
+const Color kAccent = Color(0xFFF48FB1);
+const Color kAccentDark = Color(0xFFC2185B);
+const Color kBackground = Color(0xFFF5F7FA);
+const Color kSoftPink = Color(0xFFFCE4EC);
 
 void main() {
   runApp(const FarahApp());
@@ -108,11 +110,12 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(height: 60),
               const Icon(Icons.celebration, size: 80, color: kPrimary),
               const SizedBox(height: 20),
               const Text('تسجيل الدخول',
@@ -271,46 +274,19 @@ class Hall {
     required this.image,
     required this.description,
   });
-}
 
-final List<Hall> halls = [
-  Hall(
-    id: '1',
-    name: 'قاعة الأصالة',
-    city: 'طرابلس',
-    price: 3500,
-    capacity: 400,
-    image: 'https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=800',
-    description: 'قاعة فاخرة في قلب طرابلس مع خدمة كاملة وديكورات راقية.',
-  ),
-  Hall(
-    id: '2',
-    name: 'قاعة النخبة',
-    city: 'بنغازي',
-    price: 2800,
-    capacity: 300,
-    image: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800',
-    description: 'قاعة حديثة بإطلالة رائعة وخدمة مميزة للحفلات.',
-  ),
-  Hall(
-    id: '3',
-    name: 'قاعة السلام',
-    city: 'مصراتة',
-    price: 2200,
-    capacity: 250,
-    image: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800',
-    description: 'قاعة عائلية أنيقة بأسعار مناسبة وخدمات متكاملة.',
-  ),
-  Hall(
-    id: '4',
-    name: 'قاعة الزهور',
-    city: 'الزاوية',
-    price: 1800,
-    capacity: 200,
-    image: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=800',
-    description: 'قاعة مريحة وهادئة مع حدائق خارجية خلابة.',
-  ),
-];
+  factory Hall.fromMap(Map<String, dynamic> m) {
+    return Hall(
+      id: m['id'] ?? '',
+      name: m['name'] ?? '',
+      city: m['city'] ?? '',
+      price: (m['price'] is num) ? (m['price'] as num).toDouble() : 0,
+      capacity: (m['capacity'] is int) ? m['capacity'] : int.tryParse('${m['capacity']}') ?? 0,
+      image: m['image'] ?? '',
+      description: m['description'] ?? '',
+    );
+  }
+}
 
 // ================= الشاشة الرئيسية =================
 class HomeScreen extends StatefulWidget {
@@ -322,6 +298,24 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String selectedCity = 'الكل';
   final List<String> cities = ['الكل', 'طرابلس', 'بنغازي', 'مصراتة', 'الزاوية'];
+  final _service = FirebaseService();
+  List<Hall> halls = [];
+  bool loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadHalls();
+  }
+
+  Future<void> _loadHalls() async {
+    setState(() => loading = true);
+    final data = await _service.getHalls();
+    setState(() {
+      halls = data.map((e) => Hall.fromMap(e)).toList();
+      loading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -335,6 +329,10 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: kPrimary,
         foregroundColor: Colors.white,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _loadHalls,
+          ),
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: () => Navigator.push(
@@ -372,11 +370,27 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(12),
-              itemCount: filtered.length,
-              itemBuilder: (_, i) => HallCard(hall: filtered[i]),
-            ),
+            child: loading
+                ? const Center(child: CircularProgressIndicator())
+                : filtered.isEmpty
+                    ? const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.inbox, size: 80, color: Colors.grey),
+                            SizedBox(height: 12),
+                            Text('لا توجد قاعات متاحة'),
+                            SizedBox(height: 8),
+                            Text('أضف قاعات من لوحة تحكم المدير',
+                                style: TextStyle(color: Colors.grey)),
+                          ],
+                        ),
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.all(12),
+                        itemCount: filtered.length,
+                        itemBuilder: (_, i) => HallCard(hall: filtered[i]),
+                      ),
           ),
         ],
       ),
@@ -414,8 +428,8 @@ class HallCard extends StatelessWidget {
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) => Container(
                   height: 180,
-                  color: Colors.grey.shade300,
-                  child: const Icon(Icons.image, size: 60),
+                  color: kSoftPink,
+                  child: const Icon(Icons.image, size: 60, color: kPrimary),
                 ),
               ),
             ),
@@ -481,8 +495,8 @@ class HallDetailsScreen extends StatelessWidget {
               fit: BoxFit.cover,
               errorBuilder: (_, __, ___) => Container(
                 height: 250,
-                color: Colors.grey.shade300,
-                child: const Icon(Icons.image, size: 80),
+                color: kSoftPink,
+                child: const Icon(Icons.image, size: 80, color: kPrimary),
               ),
             ),
             Padding(
@@ -689,7 +703,9 @@ class _BookingScreenState extends State<BookingScreen> {
             Slider(
               value: guests.toDouble(),
               min: 50,
-              max: widget.hall.capacity.toDouble(),
+              max: widget.hall.capacity > 50
+                  ? widget.hall.capacity.toDouble()
+                  : 500,
               divisions: 10,
               activeColor: kAccent,
               inactiveColor: kSoftPink,
@@ -779,8 +795,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
   final _expiry = TextEditingController();
   final _cvv = TextEditingController();
   bool processing = false;
+  final _service = FirebaseService();
 
-  void _pay() {
+  Future<void> _pay() async {
     if (method == 'بطاقة مصرفية') {
       if (_cardNumber.text.length < 16 ||
           _cardName.text.isEmpty ||
@@ -794,22 +811,38 @@ class _PaymentScreenState extends State<PaymentScreen> {
     }
 
     setState(() => processing = true);
-    Future.delayed(const Duration(seconds: 2), () {
-      if (!mounted) return;
-      setState(() => processing = false);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) => SuccessScreen(
-            hall: widget.hall,
-            date: widget.date,
-            guests: widget.guests,
-            total: widget.total,
-            method: method,
-          ),
+
+    // حفظ الحجز في Firebase
+    final booking = {
+      'customerName': widget.customerName,
+      'customerPhone': widget.customerPhone,
+      'hallName': widget.hall.name,
+      'hallId': widget.hall.id,
+      'date': '${widget.date.year}/${widget.date.month}/${widget.date.day}',
+      'guests': widget.guests,
+      'total': widget.total,
+      'paymentMethod': method,
+      'status': 'قيد المراجعة',
+    };
+
+    await _service.addBooking(booking);
+
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (!mounted) return;
+    setState(() => processing = false);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => SuccessScreen(
+          hall: widget.hall,
+          date: widget.date,
+          guests: widget.guests,
+          total: widget.total,
+          method: method,
         ),
-      );
-    });
+      ),
+    );
   }
 
   @override
@@ -1142,6 +1175,7 @@ class ProfileScreen extends StatelessWidget {
           _item(Icons.payment, 'طرق الدفع'),
           _item(Icons.notifications, 'الإشعارات'),
           _item(Icons.help, 'المساعدة والدعم'),
+          _item(Icons.admin_panel_settings, 'لوحة تحكم المدير'),
           _item(Icons.info, 'عن التطبيق'),
           const SizedBox(height: 20),
           Padding(
@@ -1171,7 +1205,14 @@ class ProfileScreen extends StatelessWidget {
       leading: Icon(icon, color: kPrimary),
       title: Text(title),
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      onTap: () {},
+      onTap: () {
+        if (title == 'لوحة تحكم المدير') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const AdminLoginScreen()),
+          );
+        }
+      },
     );
   }
 }
