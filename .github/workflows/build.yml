@@ -1,4 +1,4 @@
-name: Build APK
+name: Build 3 Apps
 on: [push]
 jobs:
   build:
@@ -9,15 +9,35 @@ jobs:
         with:
           flutter-version: '3.19.0'
           channel: 'stable'
+
       - name: Create Android folder in temp
         run: |
           cd /tmp
           flutter create --project-name farah temp_project
           cp -r /tmp/temp_project/android $GITHUB_WORKSPACE/
+
       - run: flutter pub get
       - run: dart run flutter_launcher_icons
-      - run: flutter build apk --release
+
+      - name: Build Customer App
+        run: |
+          flutter build apk --release --target=lib/main_customer.dart
+          cp build/app/outputs/flutter-apk/app-release.apk build/customer.apk
+
+      - name: Build Client App
+        run: |
+          flutter build apk --release --target=lib/main_client.dart
+          cp build/app/outputs/flutter-apk/app-release.apk build/client.apk
+
+      - name: Build Admin App
+        run: |
+          flutter build apk --release --target=lib/main_admin.dart
+          cp build/app/outputs/flutter-apk/app-release.apk build/admin.apk
+
       - uses: actions/upload-artifact@v4
         with:
-          name: app-release
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: farah-apps
+          path: |
+            build/customer.apk
+            build/client.apk
+            build/admin.apk
