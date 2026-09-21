@@ -16,6 +16,13 @@ jobs:
           flutter create --project-name farah temp_project
           cp -r /tmp/temp_project/android $GITHUB_WORKSPACE/
 
+      - name: Add INTERNET permission
+        run: |
+          MANIFEST=android/app/src/main/AndroidManifest.xml
+          sed -i 's|<application|<uses-permission android:name="android.permission.INTERNET" />\n    <application|' $MANIFEST
+          echo "===== AndroidManifest.xml ====="
+          cat $MANIFEST
+
       - run: flutter pub get
       - run: dart run flutter_launcher_icons
 
